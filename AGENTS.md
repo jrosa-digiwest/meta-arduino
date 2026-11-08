@@ -1,5 +1,11 @@
 # Agent Instructions for meta-arduino
 
+> **Fork:** this checkout is the jrosa-digiwest/meta-arduino fork. Read
+> [FORK.md](FORK.md) for its branch workflow and its rules for upstream PRs.
+> In particular: never open a PR, issue or comment in arduino/meta-arduino
+> or any other Arduino repository unless the user explicitly asked for it
+> and both the agent and the user have validated the change.
+
 Project overview, layer architecture, and contribution guidelines live in
 [README.md](README.md) and [DEVELOPERS.md](DEVELOPERS.md) — read those first.
 
