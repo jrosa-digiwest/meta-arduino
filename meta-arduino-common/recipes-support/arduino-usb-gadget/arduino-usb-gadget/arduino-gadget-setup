@@ -102,6 +102,22 @@ mount_ffs_adb() {
         mount -t functionfs adb "$FFS_ADB_DIR" -o "uid=${adb_uid},gid=${adb_gid}"
 }
 
+# adbd closes and reopens FunctionFS if the gadget is not bound within 1s of
+# writing its descriptors, so bind only once they are written: the kernel
+# creates ep1 at that point. Gives up waiting after 10s.
+wait_ffs_adb_ready() {
+    is_mounted "$FFS_ADB_DIR" || return 0
+    i=0
+    while [ ! -e "${FFS_ADB_DIR}/ep1" ]; do
+        if [ "$i" -ge 200 ]; then
+            echo "Warning: adbd has not set up ${FFS_ADB_DIR} after 10s, binding anyway" >&2
+            return 0
+        fi
+        sleep 0.05
+        i=$((i + 1))
+    done
+}
+
 start() {
     load_config
 
@@ -190,6 +206,7 @@ bind() {
 
     echo "Binding Arduino USB gadget to UDC: ${udc}"
     for attempt in 1 2 3 4 5; do
+        wait_ffs_adb_ready
         if printf '%s' "$udc" > "${GADGET_PATH}/UDC" 2>/dev/null; then
             return 0
         fi
