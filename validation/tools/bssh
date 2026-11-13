@@ -1,0 +1,4 @@
+#!/bin/sh
+# bssh <ip> <cmd...> : root SSH to a board (dev image: empty password, host keys change per flash)
+ip=$1; shift
+exec ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=8 -o ServerAliveInterval=5 -o ServerAliveCountMax=3 -o LogLevel=ERROR root@$ip "$@"
