@@ -1,0 +1,14 @@
+# USB NCM gadget link to the host (arduino-usb-gadget, schema "ncm"). The board
+# is 10.11.99.1 and NetworkManager hands out 10.11.99.2-6 to the host by DHCP.
+[connection]
+id=usb0-ncm
+type=ethernet
+interface-name=usb0
+autoconnect=true
+
+[ipv4]
+method=shared
+address1=10.11.99.1/29
+
+[ipv6]
+method=disabled
