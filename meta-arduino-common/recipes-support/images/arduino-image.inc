@@ -79,3 +79,13 @@ fakeroot add_custom_sudoers () {
 }
 
 IMAGE_PREPROCESS_COMMAND += "add_custom_sudoers"
+
+# When the build keeps /var/log on disk (FILESYSTEM_PERMS_TABLES without
+# fs-perms-volatile-log.txt), store the journal there too, capped at 64 MB.
+add_persistent_journal() {
+    install -d ${IMAGE_ROOTFS}${sysconfdir}/systemd/journald.conf.d
+    printf '[Journal]\nStorage=persistent\nSystemMaxUse=64M\n' \
+        > ${IMAGE_ROOTFS}${sysconfdir}/systemd/journald.conf.d/50-arduino-persistent.conf
+}
+
+ROOTFS_POSTPROCESS_COMMAND += "${@bb.utils.contains('FILESYSTEM_PERMS_TABLES', 'files/fs-perms-volatile-log.txt', '', 'add_persistent_journal', d)}"
