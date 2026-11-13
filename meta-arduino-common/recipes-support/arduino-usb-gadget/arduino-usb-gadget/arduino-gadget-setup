@@ -103,12 +103,21 @@ mount_ffs_adb() {
 }
 
 # adbd closes and reopens FunctionFS if the gadget is not bound within 1s of
-# writing its descriptors, so bind only once they are written: the kernel
-# creates ep1 at that point. Gives up waiting after 10s.
+# writing its descriptors, and closing it unbinds the gadget again. So bind
+# only once they are written: the kernel then reports the function as ready
+# (Linux 6.9 and later) and creates ep1. Gives up waiting after 10s.
+ffs_adb_ready() {
+    if [ -e "${GADGET_PATH}/functions/ffs.adb/ready" ]; then
+        [ "$(cat "${GADGET_PATH}/functions/ffs.adb/ready" 2>/dev/null)" = 1 ]
+    else
+        [ -e "${FFS_ADB_DIR}/ep1" ]
+    fi
+}
+
 wait_ffs_adb_ready() {
     is_mounted "$FFS_ADB_DIR" || return 0
     i=0
-    while [ ! -e "${FFS_ADB_DIR}/ep1" ]; do
+    while ! ffs_adb_ready; do
         if [ "$i" -ge 200 ]; then
             echo "Warning: adbd has not set up ${FFS_ADB_DIR} after 10s, binding anyway" >&2
             return 0
