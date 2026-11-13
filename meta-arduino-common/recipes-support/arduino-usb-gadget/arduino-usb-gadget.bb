@@ -13,6 +13,7 @@ SRC_URI = " \
     file://20-arduino-gadget.conf \
     file://usb0-ncm.nmconnection \
     file://86-arduino-usb-gadget-nm.rules \
+    file://90-arduino-usb0.conf \
 "
 
 S = "${UNPACKDIR}"
@@ -43,6 +44,9 @@ do_install() {
     install -d ${D}${nonarch_base_libdir}/udev/rules.d
     install -m 0644 ${UNPACKDIR}/86-arduino-usb-gadget-nm.rules \
         ${D}${nonarch_base_libdir}/udev/rules.d/
+    install -d ${D}${sysconfdir}/NetworkManager/dnsmasq-shared.d
+    install -m 0644 ${UNPACKDIR}/90-arduino-usb0.conf \
+        ${D}${sysconfdir}/NetworkManager/dnsmasq-shared.d/
 }
 
 # The adbd drop-in is inert unless android-tools-adbd is installed, so it can be
@@ -52,6 +56,7 @@ FILES:${PN} += " \
     ${systemd_system_unitdir}/android-tools-adbd.service.d \
     ${nonarch_libdir}/NetworkManager/system-connections \
     ${nonarch_base_libdir}/udev/rules.d \
+    ${sysconfdir}/NetworkManager/dnsmasq-shared.d \
 "
 
 RDEPENDS:${PN} += "libusbgx-config"
