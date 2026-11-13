@@ -1,0 +1,3 @@
+# NetworkManager leaves USB gadget network devices unmanaged by default
+# (85-nm-unmanaged.rules); manage usb0 so the usb0-ncm profile can bring it up.
+ACTION!="remove", SUBSYSTEM=="net", ENV{DEVTYPE}=="gadget", ENV{INTERFACE}=="usb0", ENV{NM_UNMANAGED}="0"
