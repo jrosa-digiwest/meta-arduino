@@ -11,6 +11,7 @@ SRC_URI = " \
     file://arduino-gadget-setup \
     file://usb-gadget.service \
     file://20-arduino-gadget.conf \
+    file://20-arduino-router-serial.conf \
 "
 
 S = "${UNPACKDIR}"
@@ -33,13 +34,18 @@ do_install() {
     install -d ${D}${systemd_system_unitdir}/android-tools-adbd.service.d
     install -m 0644 ${UNPACKDIR}/20-arduino-gadget.conf \
         ${D}${systemd_system_unitdir}/android-tools-adbd.service.d/
+
+    install -d ${D}${systemd_system_unitdir}/arduino-router-serial.service.d
+    install -m 0644 ${UNPACKDIR}/20-arduino-router-serial.conf \
+        ${D}${systemd_system_unitdir}/arduino-router-serial.service.d/
 }
 
-# The adbd drop-in is inert unless android-tools-adbd is installed, so it can be
-# shipped unconditionally.
+# The adbd and arduino-router-serial drop-ins are inert unless those units are
+# installed, so they can be shipped unconditionally.
 FILES:${PN} += " \
     ${systemd_system_unitdir}/usb-gadget.service \
     ${systemd_system_unitdir}/android-tools-adbd.service.d \
+    ${systemd_system_unitdir}/arduino-router-serial.service.d \
 "
 
 RDEPENDS:${PN} += "libusbgx-config"
