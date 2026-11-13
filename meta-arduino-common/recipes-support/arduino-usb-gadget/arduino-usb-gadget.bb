@@ -14,6 +14,7 @@ SRC_URI = " \
     file://20-arduino-router-serial.conf \
     file://usb0-ncm.nmconnection \
     file://86-arduino-usb-gadget-nm.rules \
+    file://90-arduino-usb0.conf \
 "
 
 S = "${UNPACKDIR}"
@@ -48,6 +49,9 @@ do_install() {
     install -d ${D}${nonarch_base_libdir}/udev/rules.d
     install -m 0644 ${UNPACKDIR}/86-arduino-usb-gadget-nm.rules \
         ${D}${nonarch_base_libdir}/udev/rules.d/
+    install -d ${D}${sysconfdir}/NetworkManager/dnsmasq-shared.d
+    install -m 0644 ${UNPACKDIR}/90-arduino-usb0.conf \
+        ${D}${sysconfdir}/NetworkManager/dnsmasq-shared.d/
 }
 
 # The adbd and arduino-router-serial drop-ins are inert unless those units are
@@ -58,6 +62,7 @@ FILES:${PN} += " \
     ${systemd_system_unitdir}/arduino-router-serial.service.d \
     ${nonarch_libdir}/NetworkManager/system-connections \
     ${nonarch_base_libdir}/udev/rules.d \
+    ${sysconfdir}/NetworkManager/dnsmasq-shared.d \
 "
 
 RDEPENDS:${PN} += "libusbgx-config"
