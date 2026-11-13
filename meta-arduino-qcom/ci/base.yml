@@ -19,6 +19,12 @@ repos:
       meta-arduino-common:
       meta-arduino-qcom:
 
+local_conf_header:
+  arduino-logs: |
+    # Development images: keep /var/log on disk (instead of a link to
+    # /var/volatile/log on tmpfs) so logs survive reboots.
+    FILESYSTEM_PERMS_TABLES:remove = "files/fs-perms-volatile-log.txt"
+
 target:
   - arduino-console-image
   - arduino-container-image
