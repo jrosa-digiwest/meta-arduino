@@ -5,10 +5,6 @@ IMAGE_FEATURES:append = " enable-adbd"
 # Necessary to actually start android-tools-adbd, not just install it.
 inherit image-adbd
 
-# Record the layer revisions in /etc/buildinfo for every image: os-release's
-# BUILD_ID excludes DATETIME from its signature and comes back from sstate.
-inherit image-buildinfo
-
 # Install root devicetree and devicetree overlays
 CORE_IMAGE_EXTRA_INSTALL += " \
     arduino-device-tree \
